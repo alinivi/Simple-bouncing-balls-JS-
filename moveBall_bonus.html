@@ -1,0 +1,112 @@
+<div id="ball" style="
+  z-index:5;
+  position:absolute;
+  left:0px;
+  top:0px;
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  background:green"></div>
+
+<div id="carré" style="
+  position: absolute;
+  left:200px;
+  top:200px;
+  width:500px;
+  height:500px;
+  border-radius:0%;
+  border-style: solid;
+  border-color:black"></div>
+
+<script>
+
+/*Xmin, Ymin, Xmax, Ymax wil be the boundaries for the ball movement
+Xmax and Ymax are 50px smaller than the borders of the carré because the ball is drawn starting from
+the upper-left corner and the height and width of the ball are 50px*/
+var Xmax = 650;
+var Ymax = 650;
+var Xmin = 200;
+var Ymin = 200;
+//set a random point of departure for the ball
+var positionX = Xmin + Math.floor(Math.random()*Xmax);
+var positionY = Ymin + Math.floor(Math.random()*Ymax);
+
+/*define diferent velocities on X and Y axes in order for the angle of the movement to be random
+after each change of direction (as a consequence, the ball will not bounce geometrically from the wall)*/
+var velocityX = 2 + Math.floor(Math.random()*5); // the 2 was randomly chosen to apply a minimum speed
+var velocityY = 2 + Math.floor(Math.random()*5);
+
+var reverseX = false;
+var reverseY = false;
+var ball = document.getElementById('ball');
+
+function move() {
+  if (!reverseX && !reverseY) {
+    if (positionX+velocityX<Xmax)
+      positionX += velocityX;
+    else positionX = Xmax;
+    if (positionY+velocityY<Ymax)
+      positionY += velocityY;
+    else positionY = Ymax;
+    }
+
+  else if (!reverseX && reverseY) {
+    if (positionX+velocityX<Xmax)
+      positionX += velocityX;
+    else positionX = Xmax;
+    if (positionY-velocityY>Ymin)
+      positionY -= velocityY;
+    else positionY = Ymin;
+    }
+
+  else if (reverseX && !reverseY) {
+    if (positionX-velocityX>Xmin)
+      positionX -= velocityX;
+    else positionX = Xmin;
+    if (positionY+velocityY<Ymax)
+      positionY += velocityY;
+    else positionY = Ymax;
+    }
+
+  else if (reverseX && reverseY) {
+    if (positionX-velocityX>Xmin)
+      positionX -= velocityX;
+    else positionX = Xmin;
+    if (positionY-velocityY>Ymin)
+      positionY -= velocityY;
+    else positionY = Ymin;
+    }
+
+  ball.style.left = positionX + "px";
+  ball.style.top =  positionY + "px";
+
+  if (positionX===Xmax || positionX===Xmin) {
+    reverseX = !reverseX;
+
+    //change color of ball to randomly generated color
+    let colorR = Math.floor(Math.random()*256).toString();
+    let colorG = Math.floor(Math.random()*256).toString();
+    let colorB = Math.floor(Math.random()*256).toString();
+    ball.style.background = "rgb(" + colorR + ", "+ colorG + ", " + colorB + ")";
+
+    //change velocity on X axis to a random value in order to change the angle at which the ball moves
+    velocityX = 2 + Math.floor(Math.random()*5);
+    }
+
+  if (positionY===Ymax || positionY===Ymin) {
+    reverseY = !reverseY;
+
+    //change color of ball to randomly generated color
+    let colorR = Math.floor(Math.random()*256).toString();
+    let colorG = Math.floor(Math.random()*256).toString();
+    let colorB = Math.floor(Math.random()*256).toString();
+    ball.style.background = "rgb(" + colorR + ", " + colorG + ", " + colorB + ")";
+
+    //change velocity on Y axis to a random value in order to change the angle at which the ball moves
+    velocityY = 2 + Math.floor(Math.random()*5);
+    }
+}
+
+setInterval(move, 15);
+
+</script>
